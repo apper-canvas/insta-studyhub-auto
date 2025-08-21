@@ -44,18 +44,30 @@ const Dashboard = () => {
 
   const getCourse = (courseId) => courses.find(c => c.Id === courseId);
 
-  const getUpcomingAssignments = () => {
+const getUpcomingAssignments = () => {
     const today = new Date();
     const weekFromNow = addDays(today, 7);
     
     return assignments
-      .filter(a => a.status === "pending" && new Date(a.dueDate) <= weekFromNow)
-      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+      .filter(a => {
+        if (a.status !== "pending") return false;
+        const dueDate = new Date(a.dueDate);
+        return !isNaN(dueDate.getTime()) && dueDate <= weekFromNow;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.dueDate);
+        const dateB = new Date(b.dueDate);
+        return dateA - dateB;
+      })
       .slice(0, 5);
   };
 
-  const getTodayAssignments = () => {
-    return assignments.filter(a => a.status === "pending" && isToday(new Date(a.dueDate)));
+const getTodayAssignments = () => {
+    return assignments.filter(a => {
+      if (a.status !== "pending") return false;
+      const dueDate = new Date(a.dueDate);
+      return !isNaN(dueDate.getTime()) && isToday(dueDate);
+    });
   };
 
 const getOverallGPA = () => {
@@ -85,8 +97,9 @@ const formatDueDate = (dateString) => {
     return format(date, "MMM dd");
   };
 
-  const getDueDateColor = (dateString) => {
+const getDueDateColor = (dateString) => {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "text-surface-600";
     if (isToday(date)) return "text-red-600";
     if (isTomorrow(date)) return "text-yellow-600";
     return "text-surface-600";
@@ -208,10 +221,13 @@ const formatDueDate = (dateString) => {
                           <p className="text-sm text-surface-600">{course?.name}</p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
+<div className="flex items-center space-x-2">
                         <PriorityBadge priority={assignment.priority} />
                         <span className="text-xs text-red-600 font-medium">
-                          {format(new Date(assignment.dueDate), "h:mm a")}
+                          {(() => {
+                            const date = new Date(assignment.dueDate);
+                            return isNaN(date.getTime()) ? "Invalid time" : format(date, "h:mm a");
+                          })()}
                         </span>
                       </div>
                     </div>
