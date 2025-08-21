@@ -7,7 +7,7 @@ const getApperClient = () => {
   });
 };
 
-const COURSE_TABLE_NAME = 'Course';
+const COURSE_TABLE_NAME = 'course_c';
 
 export const courseService = {
   async getAll() {
