@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import { cn } from "@/utils/cn";
 
 const Input = forwardRef(({ 
-  className, 
+  className,
   type = 'text',
   ...props 
 }, ref) => {
