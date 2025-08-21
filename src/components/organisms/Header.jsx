@@ -4,6 +4,7 @@ import Button from "@/components/atoms/Button";
 import { AuthContext } from "@/App";
 const Header = ({ onMenuClick }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const authContext = useContext(AuthContext);
 
   useState(() => {
     const timer = setInterval(() => {
@@ -66,8 +67,7 @@ const Header = ({ onMenuClick }) => {
             <span className="absolute -top-1 -right-1 h-3 w-3 bg-accent-500 rounded-full"></span>
           </Button>
           
-          <Button variant="ghost" size="sm" onClick={() => {
-            const authContext = React.useContext(AuthContext);
+<Button variant="ghost" size="sm" onClick={() => {
             authContext?.logout();
           }}>
             <ApperIcon name="LogOut" className="h-5 w-5" />
