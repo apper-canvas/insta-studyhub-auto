@@ -127,12 +127,18 @@ const AssignmentTable = ({ assignments = [], courses = [], onEdit, onDelete, onT
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+<td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-surface-900">
-                      {format(new Date(assignment.dueDate), "MMM dd, yyyy")}
+                      {(() => {
+                        const date = new Date(assignment.dueDate);
+                        return isNaN(date.getTime()) ? "Invalid date" : format(date, "MMM dd, yyyy");
+                      })()}
                     </div>
                     <div className="text-xs text-surface-500">
-                      {format(new Date(assignment.dueDate), "h:mm a")}
+                      {(() => {
+                        const date = new Date(assignment.dueDate);
+                        return isNaN(date.getTime()) ? "N/A" : format(date, "h:mm a");
+                      })()}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

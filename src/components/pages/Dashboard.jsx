@@ -66,8 +66,19 @@ const getOverallGPA = () => {
     return totalGrade / validCourses.length;
   };
 
-  const formatDueDate = (dateString) => {
+const formatDueDate = (dateString) => {
+    // Validate date string before creating Date object
+    if (!dateString || dateString === '' || dateString === null || dateString === undefined) {
+      return "No due date";
+    }
+    
     const date = new Date(dateString);
+    
+    // Check if the Date object is valid
+    if (isNaN(date.getTime())) {
+      return "No due date";
+    }
+    
     if (isToday(date)) return "Today";
     if (isTomorrow(date)) return "Tomorrow";
     if (isThisWeek(date)) return format(date, "EEEE");
