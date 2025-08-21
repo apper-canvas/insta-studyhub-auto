@@ -98,6 +98,7 @@ const formatDueDate = (dateString) => {
   };
 
 const getDueDateColor = (dateString) => {
+    if (!dateString || dateString === null || dateString === undefined) return "text-surface-600";
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "text-surface-600";
     if (isToday(date)) return "text-red-600";
@@ -225,8 +226,11 @@ const getDueDateColor = (dateString) => {
                         <PriorityBadge priority={assignment.priority} />
                         <span className="text-xs text-red-600 font-medium">
                           {(() => {
+if (!assignment.dueDate || assignment.dueDate === null || assignment.dueDate === undefined) {
+                              return "Invalid date";
+                            }
                             const date = new Date(assignment.dueDate);
-                            return isNaN(date.getTime()) ? "Invalid time" : format(date, "h:mm a");
+                            return isNaN(date.getTime()) ? "Invalid date" : format(date, "h:mm a");
                           })()}
                         </span>
                       </div>
