@@ -1,7 +1,7 @@
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
-
+import { AuthContext } from "@/App";
 const Header = ({ onMenuClick }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -61,9 +61,16 @@ const Header = ({ onMenuClick }) => {
             </span>
           </div>
           
-          <Button variant="ghost" size="sm" className="relative">
+<Button variant="ghost" size="sm" className="relative">
             <ApperIcon name="Bell" className="h-5 w-5" />
             <span className="absolute -top-1 -right-1 h-3 w-3 bg-accent-500 rounded-full"></span>
+          </Button>
+          
+          <Button variant="ghost" size="sm" onClick={() => {
+            const authContext = React.useContext(AuthContext);
+            authContext?.logout();
+          }}>
+            <ApperIcon name="LogOut" className="h-5 w-5" />
           </Button>
         </div>
       </div>
