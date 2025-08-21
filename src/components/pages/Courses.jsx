@@ -7,17 +7,18 @@ import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import CourseCard from "@/components/organisms/CourseCard";
+import AddCourseModal from "@/components/organisms/AddCourseModal";
 import { courseService } from "@/services/api/courseService";
 import { assignmentService } from "@/services/api/assignmentService";
 
 const Courses = () => {
-  const [courses, setCourses] = useState([]);
+const [courses, setCourses] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const loadData = async () => {
     setLoading(true);
     setError("");
@@ -69,9 +70,19 @@ const Courses = () => {
       }
     }
   };
-
-  const handleEditCourse = (course) => {
+const handleEditCourse = (course) => {
     toast.info("Course editing feature coming soon!");
+  };
+
+  const handleAddCourse = async (courseData) => {
+    try {
+      const newCourse = await courseService.create(courseData);
+      setCourses(prev => [...prev, newCourse]);
+      await loadData(); // Reload to ensure consistency
+    } catch (error) {
+      console.error("Error adding course:", error);
+      throw error;
+    }
   };
 
   if (loading) return <Loading />;
@@ -94,7 +105,10 @@ const Courses = () => {
             placeholder="Search courses..."
             className="w-full sm:w-64"
           />
-          <Button variant="primary">
+<Button 
+            variant="primary"
+            onClick={() => setIsAddModalOpen(true)}
+          >
             <ApperIcon name="Plus" className="w-4 h-4 mr-2" />
             Add Course
           </Button>
@@ -172,11 +186,11 @@ const Courses = () => {
         </div>
       ) : (
         <Empty
-          icon="BookOpen"
+icon="BookOpen"
           title="No courses yet"
           description="Start building your academic profile by adding your first course. Track grades, assignments, and progress all in one place."
           actionLabel="Add Your First Course"
-          onAction={() => toast.info("Course creation feature coming soon!")}
+          onAction={() => setIsAddModalOpen(true)}
         />
       )}
 
@@ -187,7 +201,13 @@ const Courses = () => {
             {searchQuery && ` matching "${searchQuery}"`}
           </p>
         </div>
-      )}
+)}
+      
+      <AddCourseModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onCourseAdded={handleAddCourse}
+      />
     </div>
   );
 };
