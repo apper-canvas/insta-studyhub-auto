@@ -58,10 +58,12 @@ const Dashboard = () => {
     return assignments.filter(a => a.status === "pending" && isToday(new Date(a.dueDate)));
   };
 
-  const getOverallGPA = () => {
+const getOverallGPA = () => {
     if (courses.length === 0) return 0;
-    const totalGrade = courses.reduce((sum, course) => sum + course.currentGrade, 0);
-    return totalGrade / courses.length;
+    const validCourses = courses.filter(course => course.current_grade_c != null);
+    if (validCourses.length === 0) return 0;
+    const totalGrade = validCourses.reduce((sum, course) => sum + (course.current_grade_c || 0), 0);
+    return totalGrade / validCourses.length;
   };
 
   const formatDueDate = (dateString) => {
@@ -296,8 +298,8 @@ const Dashboard = () => {
                     
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-surface-600">{coursePendingCount} pending</span>
-                      <span className="font-semibold text-lg text-primary-600">
-                        {course.currentGrade.toFixed(1)}%
+<span className="font-semibold text-lg text-primary-600">
+                        {course.current_grade_c != null ? `${course.current_grade_c.toFixed(1)}%` : 'N/A'}
                       </span>
                     </div>
                     
